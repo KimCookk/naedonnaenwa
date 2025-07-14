@@ -8,7 +8,7 @@ part of 'payment_history.dart';
 
 class PaymentHistoryAdapter extends TypeAdapter<PaymentHistory> {
   @override
-  final int typeId = 0;
+  final int typeId = 1;
 
   @override
   PaymentHistory read(BinaryReader reader) {
@@ -19,6 +19,7 @@ class PaymentHistoryAdapter extends TypeAdapter<PaymentHistory> {
     return PaymentHistory(
       amount: fields[0] as int,
       paidAt: fields[1] as DateTime,
+      type: fields[3] as PaymentType,
       memo: fields[2] as String?,
     );
   }
@@ -26,13 +27,15 @@ class PaymentHistoryAdapter extends TypeAdapter<PaymentHistory> {
   @override
   void write(BinaryWriter writer, PaymentHistory obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.amount)
       ..writeByte(1)
       ..write(obj.paidAt)
       ..writeByte(2)
-      ..write(obj.memo);
+      ..write(obj.memo)
+      ..writeByte(3)
+      ..write(obj.type);
   }
 
   @override
@@ -42,6 +45,45 @@ class PaymentHistoryAdapter extends TypeAdapter<PaymentHistory> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is PaymentHistoryAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class PaymentTypeAdapter extends TypeAdapter<PaymentType> {
+  @override
+  final int typeId = 0;
+
+  @override
+  PaymentType read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return PaymentType.repayment;
+      case 1:
+        return PaymentType.borrowMore;
+      default:
+        return PaymentType.repayment;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, PaymentType obj) {
+    switch (obj) {
+      case PaymentType.repayment:
+        writer.writeByte(0);
+        break;
+      case PaymentType.borrowMore:
+        writer.writeByte(1);
+        break;
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PaymentTypeAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
