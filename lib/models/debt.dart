@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:naedonnaenwa/models/payment_history.dart';
+import 'package:naedonnaenwa/models/tag.dart';
 
 part 'debt.g.dart';
 
@@ -73,6 +74,9 @@ class Debt {
   @HiveField(11)
   final CurrencyType currency;
 
+  @HiveField(12)
+  List<Tag> tags;
+
   Debt({
     required this.id,
     required this.name,
@@ -83,6 +87,7 @@ class Debt {
     required this.createdAt,
     required this.updatedAt,
     required this.currency,
+    required this.tags,
     this.note,
     this.recurring = RecurringType.none,
     this.isPaid = false,

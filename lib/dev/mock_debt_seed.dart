@@ -23,6 +23,7 @@ Future<void> insertMockDebts(DebtRepository repo) async {
       currency: CurrencyType.krw,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
+      tags: [],
     ),
     Debt(
       id: const Uuid().v4(),
@@ -36,6 +37,7 @@ Future<void> insertMockDebts(DebtRepository repo) async {
       currency: CurrencyType.krw,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
+      tags: [],
     ),
   ];
 

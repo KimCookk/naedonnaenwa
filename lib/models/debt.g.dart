@@ -26,6 +26,7 @@ class DebtAdapter extends TypeAdapter<Debt> {
       createdAt: fields[9] as DateTime,
       updatedAt: fields[10] as DateTime,
       currency: fields[11] as CurrencyType,
+      tags: (fields[12] as List).cast<Tag>(),
       note: fields[5] as String?,
       recurring: fields[7] as RecurringType,
       isPaid: fields[8] as bool,
@@ -35,7 +36,7 @@ class DebtAdapter extends TypeAdapter<Debt> {
   @override
   void write(BinaryWriter writer, Debt obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -59,7 +60,9 @@ class DebtAdapter extends TypeAdapter<Debt> {
       ..writeByte(10)
       ..write(obj.updatedAt)
       ..writeByte(11)
-      ..write(obj.currency);
+      ..write(obj.currency)
+      ..writeByte(12)
+      ..write(obj.tags);
   }
 
   @override
