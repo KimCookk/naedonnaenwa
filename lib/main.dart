@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,
       ),
-      home: const HomeScreen(), // ✅ 여기서 새 화면 적용!
+      home: const HomeScreen(),
     );
   }
 }

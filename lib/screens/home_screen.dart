@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naedonnaenwa/providers/debt_list_provider.dart';
 import 'package:naedonnaenwa/models/debt.dart';
+import 'package:naedonnaenwa/screens/add_debt_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -16,6 +17,15 @@ class HomeScreen extends ConsumerWidget {
             style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.redAccent,
         foregroundColor: Colors.white,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const AddDebtScreen()),
+          );
+        },
+        child: const Icon(Icons.add),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
