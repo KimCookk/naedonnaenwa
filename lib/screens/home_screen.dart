@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:naedonnaenwa/providers/debt_list_provider.dart';
 import 'package:naedonnaenwa/models/debt.dart';
+import 'package:naedonnaenwa/providers/filtered_debt_provider.dart';
 import 'package:naedonnaenwa/screens/add_debt_screen.dart';
+import 'package:naedonnaenwa/widgets/tag_filter_bar.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -10,6 +12,8 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final debtState = ref.watch(debtListProvider);
+    final filteredDebts = ref.watch(filteredDebtProvider);
+    final allDebts = ref.watch(debtListProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -38,55 +42,77 @@ class HomeScreen extends ConsumerWidget {
                 child: Text('등록된 빚이 없어요 🥲', style: TextStyle(fontSize: 16)),
               );
             }
-
-            return ListView.separated(
-              itemCount: debts.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                final debt = debts[index];
-                final remaining = debt.remainingAmount;
-
-                Color color = remaining == 0
-                    ? Colors.grey
-                    : debt.type == DebtType.lent
-                        ? Colors.green
-                        : Colors.redAccent;
-
-                final typeLabel =
-                    debt.type == DebtType.lent ? '💸 빌려줌' : '📤 빌림';
-                final currency = _currencySymbol(debt.currency);
-
-                return Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 8,
-                        offset: Offset(0, 4),
-                      )
-                    ],
-                  ),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                    title: Text(debt.name,
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                    subtitle: Text(typeLabel),
-                    trailing: Text(
-                      '$currency${remaining.toString()}',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: color,
-                        fontWeight: FontWeight.bold,
-                      ),
+            return Column(
+              children: [
+                TagFilterBar(allDebts: allDebts.value ?? []),
+                SizedBox(height: 8),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: ListView.builder(
+                      itemCount: filteredDebts.length,
+                      itemBuilder: (context, index) {
+                        final debt = filteredDebts[index];
+                        return ListTile(
+                          title: Text(debt.name),
+                          subtitle: Text(
+                              '${debt.totalAmount} ${debt.currency.name.toUpperCase()}'),
+                        );
+                      },
                     ),
                   ),
-                );
-              },
+                ),
+              ],
             );
+
+            // return ListView.separated(
+            //   itemCount: debts.length,
+            //   separatorBuilder: (_, __) => const SizedBox(height: 12),
+            //   itemBuilder: (context, index) {
+            //     final debt = debts[index];
+            //     final remaining = debt.remainingAmount;
+
+            //     Color color = remaining == 0
+            //         ? Colors.grey
+            //         : debt.type == DebtType.lent
+            //             ? Colors.green
+            //             : Colors.redAccent;
+
+            //     final typeLabel =
+            //         debt.type == DebtType.lent ? '💸 빌려줌' : '📤 빌림';
+            //     final currency = _currencySymbol(debt.currency);
+
+            //     return Container(
+            //       decoration: BoxDecoration(
+            //         color: Colors.white,
+            //         borderRadius: BorderRadius.circular(16),
+            //         boxShadow: const [
+            //           BoxShadow(
+            //             color: Colors.black12,
+            //             blurRadius: 8,
+            //             offset: Offset(0, 4),
+            //           )
+            //         ],
+            //       ),
+            //       child: ListTile(
+            //         contentPadding: const EdgeInsets.symmetric(
+            //             horizontal: 16, vertical: 12),
+            //         title: Text(debt.name,
+            //             style: const TextStyle(
+            //                 fontSize: 18, fontWeight: FontWeight.bold)),
+            //         subtitle: Text(typeLabel),
+            //         trailing: Text(
+            //           '$currency${remaining.toString()}',
+            //           style: TextStyle(
+            //             fontSize: 16,
+            //             color: color,
+            //             fontWeight: FontWeight.bold,
+            //           ),
+            //         ),
+            //       ),
+            //     );
+            //   },
+            // );
           },
         ),
       ),

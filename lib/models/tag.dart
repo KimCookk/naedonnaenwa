@@ -24,6 +24,14 @@ class Tag {
     required this.type,
   });
 
+  factory Tag.system(String label) {
+    return Tag(label: label, type: TagType.system);
+  }
+
+  factory Tag.user(String label) {
+    return Tag(label: label, type: TagType.user);
+  }
+
   @override
   bool operator ==(Object other) {
     return other is Tag && other.label == label && other.type == type;
