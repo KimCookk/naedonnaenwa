@@ -6,6 +6,7 @@ import 'package:naedonnaenwa/models/debt.dart';
 import 'package:naedonnaenwa/providers/debt_repository_provider.dart';
 import 'package:naedonnaenwa/providers/filtered_debt_provider.dart';
 import 'package:naedonnaenwa/screens/add_debt_screen.dart';
+import 'package:naedonnaenwa/widgets/debt_card.dart';
 import 'package:naedonnaenwa/widgets/tag_filter_bar.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -64,11 +65,7 @@ class HomeScreen extends ConsumerWidget {
                       itemCount: filteredDebts.length,
                       itemBuilder: (context, index) {
                         final debt = filteredDebts[index];
-                        return ListTile(
-                          title: Text(debt.name),
-                          subtitle: Text(
-                              '${debt.totalAmount} ${debt.currency.name.toUpperCase()}'),
-                        );
+                        return DebtCard(debt: debt);
                       },
                     ),
                   ),
