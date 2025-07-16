@@ -22,7 +22,7 @@ Future<void> insertMockDebts(DebtRepository repo) async {
           type: PaymentType.repayment,
         ),
       ],
-      dueDate: now.add(const Duration(days: 7)),
+      dueDate: now.add(const Duration(days: -7)),
       note: '편의점 갔다옴',
       type: DebtType.lent,
       recurring: RecurringType.none,

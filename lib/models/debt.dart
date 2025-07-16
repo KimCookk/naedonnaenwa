@@ -106,4 +106,36 @@ class Debt {
 
     return result;
   }
+
+  Debt copyWith({
+    String? id,
+    String? name,
+    int? totalAmount,
+    List<PaymentHistory>? payments,
+    DateTime? dueDate,
+    String? note,
+    DebtType? type,
+    RecurringType? recurring,
+    bool? isPaid,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    CurrencyType? currency,
+    List<Tag>? tags,
+  }) {
+    return Debt(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      totalAmount: totalAmount ?? this.totalAmount,
+      payments: payments ?? this.payments,
+      dueDate: dueDate ?? this.dueDate,
+      note: note ?? this.note,
+      type: type ?? this.type,
+      recurring: recurring ?? this.recurring,
+      isPaid: isPaid ?? this.isPaid,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      currency: currency ?? this.currency,
+      tags: tags ?? this.tags,
+    );
+  }
 }

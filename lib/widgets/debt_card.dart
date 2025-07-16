@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:naedonnaenwa/models/debt.dart';
+import 'package:naedonnaenwa/models/payment_history.dart';
 import 'package:naedonnaenwa/models/tag.dart';
+import 'package:naedonnaenwa/providers/debt_list_provider.dart';
+import 'package:naedonnaenwa/providers/debt_repository_provider.dart';
+import 'package:naedonnaenwa/widgets/enum/payment_action.dart';
+import 'package:naedonnaenwa/widgets/payment_input_sheet.dart';
 
-class DebtCard extends StatelessWidget {
+class DebtCard extends ConsumerWidget {
   final Debt debt;
 
   const DebtCard({super.key, required this.debt});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -25,10 +31,12 @@ class DebtCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(debt.name,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Spacer(),
               Text(
                 '${_currencySymbol(debt.currency)}${debt.remainingAmount}',
                 style: TextStyle(
@@ -40,6 +48,39 @@ class DebtCard extends StatelessWidget {
                           ? Colors.green
                           : Colors.red,
                 ),
+              ),
+              IconButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (_) => PaymentInputSheet(
+                            onSubmit: (action, amount, paidAt) async {
+                              final type = action == PaymentAction.repayment
+                                  ? PaymentType.repayment
+                                  : PaymentType.borrowMore;
+
+                              final updatedPayments = [
+                                ...debt.payments
+                              ]; // 기존 내역 복사
+                              updatedPayments.add(PaymentHistory(
+                                amount: amount,
+                                paidAt: paidAt,
+                                type: type,
+                              ));
+
+                              final updatedDebt = debt.copyWith(
+                                payments: updatedPayments,
+                                updatedAt: DateTime.now(),
+                              );
+
+                              await ref
+                                  .read(debtRepositoryProvider)
+                                  .updateDebt(updatedDebt);
+                              ref.invalidate(debtListProvider); // 상태 새로고침
+                            },
+                          ));
+                },
+                icon: Icon(Icons.edit),
               ),
             ],
           ),
