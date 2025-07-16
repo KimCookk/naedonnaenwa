@@ -42,7 +42,7 @@ Future<void> insertMockDebts(DebtRepository repo) async {
       dueDate: now.add(const Duration(days: -3)),
       note: '점심값',
       type: DebtType.borrowed,
-      recurring: RecurringType.none,
+      recurring: RecurringType.monthly,
       currency: CurrencyType.krw,
       createdAt: now,
       updatedAt: now,

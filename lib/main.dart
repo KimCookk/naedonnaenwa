@@ -4,6 +4,7 @@ import 'package:naedonnaenwa/screens/home_screen.dart';
 import 'package:naedonnaenwa/services/datasource/debt_hive_data_source.dart';
 import 'package:naedonnaenwa/services/hive_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naedonnaenwa/services/recurring_service.dart';
 import 'package:naedonnaenwa/services/repository/debt_repository.dart';
 
 void main() async {
@@ -12,6 +13,7 @@ void main() async {
 
   final repo = DebtRepository(dataSource: DebtHiveDataSource());
   await insertMockDebts(repo);
+  await RecurringService.processAllRecurringDebts(repo); // 🔁 반복부채 처리
 
   runApp(const ProviderScope(child: MyApp()));
 }
