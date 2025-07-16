@@ -9,6 +9,7 @@ class DebtRepository {
   Future<void> addDebt(Debt debt) => dataSource.add(debt);
   Future<void> updateDebt(Debt debt) => dataSource.update(debt);
   Future<void> deleteDebt(String id) => dataSource.delete(id);
+  Future<void> deleteAllDebt() => dataSource.allDelete();
   Future<Debt?> getDebtById(String id) => dataSource.getById(id);
   Future<List<Debt>> getAllDebts() => dataSource.getAll();
 }

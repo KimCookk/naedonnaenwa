@@ -41,4 +41,10 @@ class DebtHiveDataSource implements DebtDataSource {
     final box = await _openBox();
     await box.put(debt.id, debt);
   }
+
+  @override
+  Future<void> allDelete() async {
+    final box = await _openBox();
+    await box.clear();
+  }
 }

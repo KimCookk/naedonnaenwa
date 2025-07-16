@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:naedonnaenwa/dev/mock_debt_seed.dart';
 import 'package:naedonnaenwa/providers/debt_list_provider.dart';
 import 'package:naedonnaenwa/models/debt.dart';
+import 'package:naedonnaenwa/providers/debt_repository_provider.dart';
 import 'package:naedonnaenwa/providers/filtered_debt_provider.dart';
 import 'package:naedonnaenwa/screens/add_debt_screen.dart';
 import 'package:naedonnaenwa/widgets/tag_filter_bar.dart';
@@ -11,9 +13,9 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final debtState = ref.watch(debtListProvider);
     final filteredDebts = ref.watch(filteredDebtProvider);
     final allDebts = ref.watch(debtListProvider);
+    final repo = ref.read(debtRepositoryProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -21,6 +23,15 @@ class HomeScreen extends ConsumerWidget {
             style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.redAccent,
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await resetMockDebts(repo);
+              ref.invalidate(debtListProvider);
+            },
+            icon: Icon(Icons.delete),
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -33,7 +44,7 @@ class HomeScreen extends ConsumerWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: debtState.when(
+        child: allDebts.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => Center(child: Text('에러 발생: $error')),
           data: (debts) {

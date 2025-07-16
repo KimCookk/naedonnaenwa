@@ -4,6 +4,7 @@ abstract class DebtDataSource {
   Future<void> add(Debt debt);
   Future<void> update(Debt debt);
   Future<void> delete(String id);
+  Future<void> allDelete();
   Future<Debt?> getById(String id);
   Future<List<Debt>> getAll();
 }

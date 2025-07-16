@@ -103,3 +103,7 @@ Future<void> insertMockDebts(DebtRepository repo) async {
     await repo.addDebt(debt);
   }
 }
+
+Future<void> resetMockDebts(DebtRepository repo) async {
+  await repo.deleteAllDebt();
+}
